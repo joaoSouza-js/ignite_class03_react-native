@@ -24,6 +24,7 @@ export const  theme = extendTheme({
     heading: 'Roboto_700Bold',
     body: 'Roboto_400Regular',
   },
+  
   fontSizes: {
     xs: 12,
     sm: 14,
@@ -31,9 +32,13 @@ export const  theme = extendTheme({
     lg: 18,
     xl: 20,
   },
+
   sizes: {
     14: 56,
+    11: 44,
     33: 148,
+    21: 86,
     22: 90,
-  }
+    mincontent: 'min-content',
+  },
 })

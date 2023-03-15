@@ -1,8 +1,7 @@
 import { Input, IInputProps, VStack, useTheme } from "native-base";
-import { background } from "native-base/lib/typescript/theme/styled-system";
 import { Text } from "./Text";
 
-interface TextInputProps extends IInputProps {
+export interface TextInputProps extends IInputProps {
     error?: string;
 }
 export function TextInput({error,...rest}: TextInputProps){
@@ -26,6 +25,11 @@ export function TextInput({error,...rest}: TextInputProps){
                     borderColor: 'green.500',
                     
                 }}
+                _disabled={{
+                    color: 'gray.200',
+                    
+                }}
+                
                 {...rest}
             />
             {error && (

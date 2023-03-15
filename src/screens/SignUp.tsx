@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Entypo } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { VStack, Image, Center, Icon, ScrollView } from 'native-base'
 
 import { Text } from '@components/Text'
@@ -10,8 +11,10 @@ import { TextInput } from '@components/TextInput'
 
 import LogoSvg from '@assets/logo.svg'
 import backgroundImage from '@assets/background.png'
+import { AuthRoutesParamList } from '@routes/auth'
+import { PasswordTextInput } from '@components/PasswordTextInput'
 
-export function SignUp(){
+export function SignUp({navigation}: NativeStackScreenProps<AuthRoutesParamList, 'SignUp'>){
     const [passWordIsHiding, setPassWordIsHiding] = useState(true)
     
     function handleChangePasswordVisibility(){
@@ -20,15 +23,24 @@ export function SignUp(){
             : setPassWordIsHiding(true)
     }
 
+    async function navigateToSignInScreen() {
+        navigation.navigate('SignIn')
+    }
+
     return (
         <ScrollView  
             contentContainerStyle={{flexGrow:1}}
             showsVerticalScrollIndicator={false}
         >
-            <VStack flex={1}>
+            <VStack
+                backgroundColor={'gray.900'}
+                flex={1}
+            >
                 <Image
                     alt='pessoar treinando'
                     source={backgroundImage}
+                    defaultSource={backgroundImage}
+
                     position='absolute'
                     resizeMode='cover'
                 />
@@ -59,34 +71,16 @@ export function SignUp(){
                         autoCapitalize='none'
                     />
                     
-                    <TextInput
-                        marginTop={4}
-                        secureTextEntry={passWordIsHiding}
+                    <PasswordTextInput
                         placeholder='Senha'
-                        InputRightElement={
-                            <Icon
-                                size={'md'}
-                                marginRight={'4'}
-                                color={passWordIsHiding ? 'gray.100' : 'white'} 
-                                onPress={() => handleChangePasswordVisibility()}
-                                as={<Entypo name={passWordIsHiding ? 'eye-with-line' : 'eye'}/>}
-                            />
-                        }
+                        marginTop={4}
+                     
                     />
 
-                    <TextInput
+                    <PasswordTextInput
+                        placeholder='Senha novamente'
                         marginTop={4}
-                        secureTextEntry={passWordIsHiding}
-                        placeholder='Senha'
-                        InputRightElement={
-                            <Icon
-                                size={'md'}
-                                marginRight={'4'}
-                                color={passWordIsHiding ? 'gray.100' : 'white'}
-                                onPress={() => handleChangePasswordVisibility()}
-                                as={<Entypo name={passWordIsHiding ? 'eye-with-line' : 'eye'} />}
-                            />
-                        }
+                        
                     />
                     <Button variant={'solid'} marginTop={4} >Criar e acessar</Button>
                 </Center>
@@ -95,7 +89,8 @@ export function SignUp(){
                     padding={10}
                     marginTop={'auto'}
                 >
-                    <Button 
+                    <Button
+                        onPress={() => navigateToSignInScreen()}
                         marginTop={4} 
                         variant='outline'
                     >
