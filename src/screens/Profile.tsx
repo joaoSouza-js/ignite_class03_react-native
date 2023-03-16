@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import * as FileSystem from 'expo-file-system';
+import {  TouchableOpacity } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import { AppRoutesParamList } from "@routes/appRoutes";
-import { Box, ScrollView, Skeleton, VStack } from "native-base";
+import { Box, ScrollView, Skeleton, Toast, useToast, VStack } from "native-base";
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs'
 
 
@@ -15,6 +17,47 @@ import { PasswordTextInput } from "@components/PasswordTextInput";
 
 export function Profile(route: BottomTabScreenProps<AppRoutesParamList,'Profile'>){
     const [photoIsLoading, setPhotoIsLoading] = useState(true)
+    const [userAvatar, setUserAvatar] = useState<string| undefined>();
+    const toast = useToast()
+    
+    async function handlePickImage(){
+        setPhotoIsLoading(true)
+
+        try {
+            const imageResponse = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality:1,
+                aspect: [4,4],
+                selectionLimit: 1
+            })
+     
+    
+            if (imageResponse.canceled || !imageResponse.assets[0].uri ) return;
+
+            const imageSelected = imageResponse.assets[0].uri
+            const photoInfo = await FileSystem.getInfoAsync(imageSelected)
+
+            if(photoInfo.exists && (photoInfo.size  / 1024 /1024 ) >    5) {
+                return toast.show({
+                    title: 'Está foto é muito grande, Escolha uma de até 5Mb',
+                    backgroundColor: 'red.400',
+                    placement: 'top',
+                    
+                    
+                })
+                
+            }
+            setUserAvatar(photoInfo.uri)
+
+            
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setPhotoIsLoading(false)
+        }
+    }
     
     const PhotoSize = 33
     return (
@@ -46,11 +89,12 @@ export function Profile(route: BottomTabScreenProps<AppRoutesParamList,'Profile'
                     ): (
                         <Avatar
                             size={PhotoSize}
-                            source={{ uri: 'httpsdd://github.com/joao472762.png'}}
+                            source={{ uri: userAvatar}}
                         />
 
                     )}
                     <TouchableOpacity
+                        onPress={handlePickImage}
                         hitSlop={{
                             right: 40,
                             left: 40,
